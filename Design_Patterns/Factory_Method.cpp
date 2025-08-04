@@ -46,7 +46,7 @@ class CarFactory
 private:
 public:
 	CarFactory(){ }
-	~CarFactory(){ }
+	virtual ~CarFactory(){ }
 	virtual Car* createCar() = 0;
 };
 
