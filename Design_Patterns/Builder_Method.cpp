@@ -1,4 +1,19 @@
 
+
+/*
+The Builder pattern is used to construct complex objects step-by-step, separating the construction process from the final representation of the object.
+This is useful when:
+1. The same construction process can create different representations (e.g., Sports Car vs SUV).
+2. You want to avoid a telescoping constructor (constructors with too many parameters).
+3. The creation process involves multiple steps, and different products might need different implementations of these steps.
+
+Key Participants:
+1 Product ? The final object to be built (e.g., Car).
+2.Builder (Abstract) ? Defines the interface for creating the product parts (e.g., CarBuilder).
+3 Concrete Builder ? Implements the steps to build a specific product type (e.g., SportsCarBuilder,SUVCarBuilder).
+4. Director ? Orchestrates the building steps in a specific sequence (e.g., Director class).
+
+*/
 #include <iostream>
 using namespace std;
 
