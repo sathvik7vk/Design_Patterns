@@ -1,5 +1,67 @@
 //For adapter design pattern
 
+
+/*****************************************************************************************
+ * Adapter Design Pattern (Structural Pattern)
+ *
+ * Intent:
+ * --------
+ * The Adapter pattern allows incompatible interfaces to work together by converting
+ * the interface of one class into another interface that the client expects.
+ *
+ * It acts as a "wrapper" around an existing (often third-party or legacy) class and
+ * translates client requests into a form that the wrapped class can understand.
+ *
+ * Problem Solved:
+ * ----------------
+ * - Client code expects a common interface (CloudStorage).
+ * - Some classes already match this interface (CloudDrive, FastShare).
+ * - A third-party class (VirtualDrive) has a different interface:
+ *       - uploadData(data, id)
+ *       - usedSpace(), totalSpace
+ * - We cannot modify the third-party class.
+ *
+ * Without Adapter → Client cannot directly use VirtualDrive.
+ *
+ * Solution:
+ * ----------
+ * - Create an Adapter class (VirtualDriveAdapter) that:
+ *     - Inherits from the target interface (CloudStorage).
+ *     - Internally contains the adaptee (VirtualDrive).
+ *     - Translates CloudStorage calls into VirtualDrive calls.
+ *
+ * Example Mapping in this program:
+ * --------------------------------
+ * CloudStorage::uploadContents(content)
+ *        --> VirtualDrive::uploadData(content, generatedID)
+ *
+ * CloudStorage::getFreeSpace()
+ *        --> totalSpace - usedSpace()
+ *
+ * Benefits:
+ * ----------
+ * - Enables reuse of existing / third-party code without modification.
+ * - Keeps client code independent of concrete implementations.
+ * - Supports Open/Closed Principle (open for extension, closed for modification).
+ * - Improves maintainability and scalability.
+ *
+ * When to Use Adapter:
+ * --------------------
+ * - When you want to use an existing class but its interface does not match
+ *   what your system expects.
+ * - When integrating third-party libraries or legacy systems.
+ * - When you want to standardize multiple different APIs behind one interface.
+ *
+ * Key Roles:
+ * ----------
+ * - Target Interface   : CloudStorage
+ * - Adaptee            : VirtualDrive (incompatible interface)
+ * - Adapter            : VirtualDriveAdapter
+ * - Client             : main() using CloudStorage polymorphically
+ *
+ *****************************************************************************************/
+
+ 
 #include <iostream>
 #include <string>
 #include <memory>
