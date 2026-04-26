@@ -75,7 +75,7 @@ class IVehicle
 class Car:public IVehicle
 {
     public:
-    Car(std::unique_ptr<IEngine>&& pEngine):IVehicle(std::move(pEngine)){}
+    Car(std::unique_ptr<IEngine> pEngine):IVehicle(std::move(pEngine)){}
     ~Car(){}
 
     void driveVehicle()
@@ -88,13 +88,13 @@ class Car:public IVehicle
 class Truck:public IVehicle
 {
     public:
-    Truck(std::unique_ptr<IEngine>&& pEngine):IVehicle(std::move(pEngine)){}
+    Truck(std::unique_ptr<IEngine> pEngine):IVehicle(std::move(pEngine)){}
     ~Truck(){}
 
     void driveVehicle()
     {
          spEngine->startEngine();
-         cout<<"Driving sthe truck"<<endl;
+         cout<<"Driving the truck"<<endl;
     }
 };
 
@@ -103,5 +103,9 @@ int main()
 {
     std::unique_ptr<IVehicle> pVehicle = std::make_unique<Car>(std::make_unique<PetrolEngine>());
     pVehicle->driveVehicle();
+
+    std::unique_ptr<IVehicle> pVehicle2 = std::make_unique<Truck>(std::make_unique<ElectricEngine>());
+    pVehicle2->driveVehicle();
+
     return 0;
 }
