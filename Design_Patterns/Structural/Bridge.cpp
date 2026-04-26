@@ -20,6 +20,88 @@
  * --------------------------------
  * - Abstraction         : Shape
  * - Refined Abstraction : Circle, Square
- * - Implementor        : DrawingAPI       */
+ * - Implementor        : DrawingAPI 
+
+ * Bridge achieves this by:
+    -   Using composition over inheritance
+    -   Depending on interfaces instead of concrete classes
+    -   Allowing both hierarchies to vary independently
+ 
+ */
 
 #include <iostream>
+#include <memory>
+
+using namespace std;
+
+class IEngine
+{
+    public:
+    virtual void startEngine() = 0;
+    virtual ~IEngine(){}
+};
+
+class ElectricEngine : public IEngine
+{
+    public:
+    void startEngine(){ cout<<"Started electric engine"<<endl;}
+};
+
+class PetrolEngine : public IEngine
+{
+    public:
+    void startEngine(){ cout<<"Started petrol engine"<<endl;}
+};
+
+class DieselEngine : public IEngine
+{
+    public:
+    void startEngine(){ cout<<"Started diesel engine"<<endl;}
+};
+
+
+class IVehicle
+{
+    public:
+    std::unique_ptr<IEngine> spEngine;
+
+    public:
+    IVehicle(std::unique_ptr<IEngine> pEngine):spEngine(std::move(pEngine)) { }
+    virtual void driveVehicle() =0;
+    virtual ~IVehicle(){};
+};
+
+
+class Car:public IVehicle
+{
+    public:
+    Car(std::unique_ptr<IEngine>&& pEngine):IVehicle(std::move(pEngine)){}
+    ~Car(){}
+
+    void driveVehicle()
+    {
+        spEngine->startEngine();
+        cout<<"Driving the car"<<endl;
+    }
+};
+
+class Truck:public IVehicle
+{
+    public:
+    Truck(std::unique_ptr<IEngine>&& pEngine):IVehicle(std::move(pEngine)){}
+    ~Truck(){}
+
+    void driveVehicle()
+    {
+         spEngine->startEngine();
+         cout<<"Driving sthe truck"<<endl;
+    }
+};
+
+
+int main()
+{
+    std::unique_ptr<IVehicle> pVehicle = std::make_unique<Car>(std::make_unique<PetrolEngine>());
+    pVehicle->driveVehicle();
+    return 0;
+}
