@@ -30,7 +30,7 @@ class Employee
     double salary;
 
     public:
-    Employee(std::string &iName, std::string &iPosition) : name(iName), position(iPosition), salary(0.0) {}
+    Employee(const std::string &iName, const std::string &iPosition) : name(iName), position(iPosition), salary(0.0) {}
     virtual ~Employee()=default;
     virtual void ShowDetails() = 0;
     virtual void SetSalary(double) = 0;
@@ -44,7 +44,7 @@ private:
 
 public:
 
-    Developer(std::string &iName, std::string &iPosition) :Employee(iName, iPosition){}
+    Developer(const std::string &iName, const std::string &iPosition) :Employee(iName, iPosition){}
 
     void SetSalary(double iSalary) override { salary = iSalary;}
 
@@ -60,7 +60,7 @@ private:
 
 public:
 
-    Manager(std::string &iName, std::string &iPosition) :Employee(iName, iPosition){}
+    Manager(const std::string &iName, const std::string &iPosition) :Employee(iName, iPosition){}
 
     void AddEmployee(std::unique_ptr<Employee> emp){listOfEmployees.push_back(std::move(emp));}
 
@@ -76,13 +76,23 @@ public:
     double GetSalary() override{ 
         double totalSalary = 0;
         for(const auto& emp : listOfEmployees)
-            totalSalary +=salary;
+            totalSalary +=emp->GetSalary();
         return totalSalary; }
 };
 
 int main()
 {
-
+    std::unique_ptr<Manager> manager = std::make_unique<Manager>("Alice", "Project Manager");
+    manager->SetSalary(100000);
+    std::unique_ptr<Employee> dev1 = std::make_unique<Developer>("Bob", "Software Developer");
+    dev1->SetSalary(80000);
+    std::unique_ptr<Employee> dev2 = std::make_unique<Developer>("Charlie", "Software Developer");
+    dev2->SetSalary(85000);
+    manager->AddEmployee(std::move(dev1));
+    manager->AddEmployee(std::move(dev2));
+    cout << "Manager Details: " << endl;
+    manager->ShowDetails();
+    cout << "Total Salary: " << manager->GetSalary() << endl;
 
     return 0;
 }
