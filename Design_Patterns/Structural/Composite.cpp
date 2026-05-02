@@ -1,3 +1,18 @@
+//Implementation for composite pattern
+/*
+The Composite Design Pattern is a structural pattern used to treat individual objects and compositions of objects uniformly. Think of it like a file system: a File is an individual object, and a Folder is a composition that can contain both Files and other Folders.
+
+From a C++ perspective, this pattern relies heavily on polymorphism and recursion.
+
+Key Components
+Component (Interface/Abstract Class): Declares the interface for all objects in the composition.
+
+Leaf: Represents the "primitive" objects that have no children (e.g., a File).
+
+Composite: Stores child components and implements child-related operations (e.g., a Folder).
+*/
+
+
 #include<iostream>
 #include<string>
 #include<vector>
