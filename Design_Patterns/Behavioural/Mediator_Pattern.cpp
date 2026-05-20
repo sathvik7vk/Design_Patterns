@@ -254,11 +254,20 @@ class IMediator
 class Component
 {
     private:
-    std::shared_ptr<IMediator> mediatorPtr;
+    //std::shared_ptr<IMediator> mediatorPtr;
+    std::weak_ptr<IMediator> mediatorPtr;
 
     public:
     Component(const std::shared_ptr<IMediator>& ptr = nullptr):mediatorPtr(ptr){}
+    virtual ~Component() = default;
     void setMediator(const std::shared_ptr<IMediator>& ptr){mediatorPtr = ptr;}
+
+    // Helper method for child classes to send notifications safely
+    void notifyMediator(const std::shared_ptr<Component>& self, const std::string& event) {
+        if (auto lockedMediator = mediatorPtr.lock()) {
+            lockedMediator->notify(self, event);
+        }
+    }
 };
 
 //Colleague classes or other component classes 
@@ -295,7 +304,7 @@ class TextBox:public Component
     }
 };
 
-class SubmitButton
+class SubmitButton:public Component
 {
     private:    
     bool enabled = false;
@@ -304,7 +313,7 @@ class SubmitButton
     void DisbaleButton(){enabled = false; cout<<"Submit button disabled"<<endl;}
 };
 
-class Mediator:public IMediator
+class Mediator:public IMediator, public std::enable_shared_from_this<Mediator>
 {
     private:
     std::shared_ptr<CheckBox> cbPtr;
@@ -315,12 +324,27 @@ class Mediator:public IMediator
     Mediator(const std::shared_ptr<CheckBox>& cbP, const  std::shared_ptr<TextBox>& tbP, const std::shared_ptr<SubmitButton>& sbP ):
     cbPtr(cbP), tbPtr(tbP), sbPtr(sbP)
     {
+    }
+    // FIX 1 cont.: We wire them up right after the Mediator shared_ptr is instantiated
+    void initialize() {
+        // shared_from_this() safely creates a shared_ptr<IMediator> pointing to this object
         cbPtr->setMediator(shared_from_this());
+        tbPtr->setMediator(shared_from_this());
+        sbPtr->setMediator(shared_from_this());
     }
 
     void notify(const std::shared_ptr<Component>& ptrComponent, const std::string& str )
     {
-
+        // Handle events centrally
+        if (ptrComponent == cbPtr && str == "check_changed") {
+            if (cbPtr->isChecked()) {
+                tbPtr->Activate();
+                sbPtr->EnableButton();
+            } else {
+                tbPtr->clear();
+                sbPtr->DisbaleButton();
+            }
+        }
     }
 
 };
@@ -328,11 +352,25 @@ class Mediator:public IMediator
 
 int main()
 {
-    CheckBox cb;
-    TextBox tb;
-    SubmitButton sb;
 
 
+    // FIX 3: Allocate components as shared_ptrs so lifecycles match
+    auto cb = std::make_shared<CheckBox>();
+    auto tb = std::make_shared<TextBox>();
+    auto sb = std::make_shared<SubmitButton>();
+
+    // Create mediator
+    auto mediator = std::make_shared<Mediator>(cb, tb, sb);
+    mediator->initialize(); // Securely links everything together
+
+    // Simulate user behavior
+    cout << "--- User clicks checkbox to check it ---" << endl;
+    cb->check();
+
+    cout << "\n--- User clicks checkbox to uncheck it ---" << endl;
+    cb->check();
+
+    return 0;
 
     return 0;
 }
