@@ -272,20 +272,42 @@ class Component
 
 //Colleague classes or other component classes 
 
-class CheckBox:public Component
+// class CheckBox:public Component
+// {
+//     private:
+//     bool checked = false;
+//     public:
+//     void check()
+//     {
+//         checked = !checked;
+//         cout << "Checkbox state toggled." << endl;
+    
+//     // FIX: Trigger the notification pipeline using the passed pointer
+//     //notifyMediator(self, "check_changed");
+//     }
+//     bool isChecked() const
+//     {
+//         return checked;
+//     }
+// };
+
+// Update CheckBox definition:
+class CheckBox : public Component, public std::enable_shared_from_this<CheckBox>
 {
     private:
     bool checked = false;
+    
     public:
     void check()
     {
         checked = !checked;
-        cout<<"Checkbox is checked"<<endl;
+        cout << "Checkbox state toggled. Current: " << (checked ? "Checked" : "Unchecked") << endl;
+        
+        // FIX: Trigger the notification pipeline!
+        notifyMediator(shared_from_this(), "check_changed");
     }
-    bool isChecked() const
-    {
-        return checked;
-    }
+    
+    bool isChecked() const { return checked; }
 };
 
 class TextBox:public Component
@@ -369,8 +391,6 @@ int main()
 
     cout << "\n--- User clicks checkbox to uncheck it ---" << endl;
     cb->check();
-
-    return 0;
 
     return 0;
 }
