@@ -60,14 +60,20 @@ Colleague Classes (Components): The individual classes that perform business log
 
 ---------------------------------------------------------------------
 
-Imagine a busy airport. If every single airplane had to communicate directly with every other airplane to coordinate takeoffs and landings, the sky would be absolute chaos. A pilot would have to talk to dozens of other pilots just to change altitude.
+Imagine a busy airport. If every single airplane had to communicate directly with every other airplane to 
+coordinate takeoffs and landings, the sky would be absolute chaos. A pilot would have to talk to dozens of other 
+pilots just to change altitude.
 
-Instead, every airplane communicates with a single central hub: the Air Traffic Control (ATC) tower. The tower handles the complex coordination, routes messages, and ensures order.
+Instead, every airplane communicates with a single central hub: the Air Traffic Control (ATC) tower. The tower 
+handles the complex coordination, routes messages, and ensures order.
 
-In software architecture, the Mediator Design Pattern is that ATC tower. It is a behavioral design pattern that reduces chaotic dependencies between objects by forcing them to communicate exclusively through a central mediator object, rather than directly with each other.
+In software architecture, the Mediator Design Pattern is that ATC tower. It is a behavioral design pattern 
+that reduces chaotic dependencies between objects by forcing them to communicate exclusively through a central 
+mediator object, rather than directly with each other.
 
 The Problem: Tight Coupling (The Spaghetti Web)
-As software grows, you often end up with a network of objects that all need to know about each other's state changes. For example, in a complex UI dialog:
+As software grows, you often end up with a network of objects that all need to know about each other's state 
+changes. For example, in a complex UI dialog:
 
 Checking a "Ship to different address" Checkbox must enable a hidden Form.
 
